@@ -29,7 +29,7 @@
 
     var NONE = 0;
     var X = 1;
-    var O = 2;
+    var O = -1;
 
     var BLANK_BOARD = [NONE, NONE, NONE,
                        NONE, NONE, NONE,
