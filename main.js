@@ -33,7 +33,18 @@
 
     var BLANK_BOARD = [NONE, NONE, NONE,
                        NONE, NONE, NONE,
-                       NONE, NONE, NONE]
+                       NONE, NONE, NONE];
+
+    //
+    // Output Element Globals
+    //
+
+    var oegGameTypes;
+    function updateOEGGameTypes(s) {
+        for (var i = 0; i < oegGameTypes.length; i++) {
+            oegGameTypes[i].innerHTML = s;
+        }
+    }
 
     //
     // Player Management
@@ -43,6 +54,23 @@
         if (p === X) {
             return O;
         } else {
+            return X;
+        }
+    }
+
+    //
+    // Determining Winner
+    //
+
+    function determineWinner(board, gameType) {
+        if (gameType === "regular") {
+
+        } else if (gameType === "torus") {
+
+        } else if (gameType === "klein") {
+
+        } else {
+            alert("Error in determining winner.");
             return X;
         }
     }
@@ -129,11 +157,24 @@
             var gameType = val["gameType"];
             var currentPlayer = val["currentPlayer"];
             var board = val["board"];
-            setBoard(boxes, board);
-            if (full && currentPlayer === me) {
-                allowMove(roomRef, me, board, boxes);
+
+            updateOEGGameTypes(gameType);
+
+            var winner = determineWinner(board, gameType);
+            if (winner !== NONE) {
+                if (winner === me) {
+                    alert("You win!");
+                } else {
+                    alert("You lose...");
+                }
+                window.location.reload();
             } else {
-                disallowMove(boxes);
+                setBoard(boxes, board);
+                if (full && currentPlayer === me) {
+                    allowMove(roomRef, me, board, boxes);
+                } else {
+                    disallowMove(boxes);
+                }
             }
         });
     }
@@ -143,6 +184,8 @@
     //
 
     window.onload = function() {
+        oegGameTypes = document.getElementsByClassName("game-type");
+
         var rootDataRef = new Firebase("https://jpl-tic-tac-torus.firebaseio.com/");
 
         var roomNameInput = document.getElementById("room-name-input");

@@ -9,3 +9,13 @@
     height: 100px;
     border: 1px solid black;
 }
+
+.box[data-place-value="0"] {
+    background: white;
+}
+.box[data-place-value="1"] {
+    background: red;
+}
+.box[data-place-value="2"] {
+    background: blue;
+}
