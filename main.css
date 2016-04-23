@@ -16,6 +16,6 @@
 .box[data-place-value="1"] {
     background: red;
 }
-.box[data-place-value="2"] {
+.box[data-place-value="-1"] {
     background: blue;
 }

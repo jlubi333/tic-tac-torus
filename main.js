@@ -62,16 +62,80 @@
     // Determining Winner
     //
 
+    function allEqual(xs) {
+        for (var i = 1; i < xs.length; i++) {
+            if (xs[i] !== xs[0]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     function determineWinner(board, gameType) {
+        var winFunc;
+
+        var regularWinFunc = function(b, p) {
+            // Rows
+            if (   allEqual([p, b[0], b[1], b[2]])
+                || allEqual([p, b[3], b[4], b[5]])
+                || allEqual([p, b[6], b[7], b[8]])) {
+                return true;
+            }
+            // Columns
+            if (   allEqual([p, b[0], b[3], b[6]])
+                || allEqual([p, b[1], b[4], b[7]])
+                || allEqual([p, b[2], b[5], b[8]])) {
+                return true;
+            }
+            // Diagonals
+            if (   allEqual([p, b[0], b[4], b[8]])
+                || allEqual([p, b[2], b[4], b[6]])) {
+                return true;
+            }
+            return false;
+        }
+
+        var torusWinFunc = function(b, p) {
+            // Normal Tic-Tac-Toe
+            if (regularWinFunc(b, p)) {
+                return true;
+            }
+            // Fancy Corners
+            if (   allEqual([p, b[0], b[5], b[7]])
+                || allEqual([p, b[2], b[3], b[7]])
+                || allEqual([p, b[6], b[1], b[5]])
+                || allEqual([p, b[8], b[1], b[3]])) {
+                return true;
+            }
+            return false;
+        }
+
+        var kleinWinFunc = function(b, p) {
+            // Normal Tic-Tac-Toe
+            if (regularWinFunc(b, p)) {
+                return true;
+            }
+            // TODO Klein
+            return false;
+        }
+
         if (gameType === "regular") {
-
+            winFunc = regularWinFunc;
         } else if (gameType === "torus") {
-
+            winFunc = torusWinFunc;
         } else if (gameType === "klein") {
-
+            winFunc = kleinWinFunc;
         } else {
             alert("Error in determining winner.");
             return X;
+        }
+
+        if (winFunc(board, X)) {
+            return X;
+        } else if(winFunc(board, O)) {
+            return O;
+        } else {
+            return NONE;
         }
     }
 
@@ -159,6 +223,7 @@
             var board = val["board"];
 
             updateOEGGameTypes(gameType);
+            setBoard(boxes, board);
 
             var winner = determineWinner(board, gameType);
             if (winner !== NONE) {
@@ -169,7 +234,6 @@
                 }
                 window.location.reload();
             } else {
-                setBoard(boxes, board);
                 if (full && currentPlayer === me) {
                     allowMove(roomRef, me, board, boxes);
                 } else {
