@@ -31,7 +31,7 @@
     var X = 1;
     var O = 2;
 
-    var BLANK_BOARD = [NONE, NONE, NONE
+    var BLANK_BOARD = [NONE, NONE, NONE,
                        NONE, NONE, NONE,
                        NONE, NONE, NONE]
 
@@ -56,11 +56,11 @@
             (function(index) {
                 boxes[index].onclick = function(event) {
                     if (board[index] !== NONE) {
-                        alert("u cant go there TODO");
+                        alert("That spot is already taken.");
                     } else {
                         board[index] = me;
+                        roomRef.update({"board": board, "currentPlayer": nextPlayer(me)});
                     }
-                    roomRef.update({"board": board, "currentPlayer": nextPlayer(me)});
                 }
             })(i);
         }
@@ -72,10 +72,10 @@
         }
     }
 
-    function setBoard(oldBoard, boxes, newBoard) {
+    function setBoard(boxes, board) {
+        console.log(board);
         for (var i = 0; i < boxes.length; i++) {
-            oldBoard[i] = newBoard[i];
-            boxes[i].dataset.placeValue = newBoard[i];
+            boxes[i].dataset.placeValue = board[i];
         }
     }
 
@@ -133,7 +133,7 @@
             if (full && currentPlayer === me) {
                 allowMove(roomRef, me, board, boxes);
             } else {
-                disallowMove();
+                disallowMove(boxes);
             }
         });
     }
@@ -152,7 +152,7 @@
         var availableRooms = document.getElementById("available-rooms");
         var joinRoomButton = document.getElementById("join-room-button");
 
-        var boxes = document.getElementsByClassName(boxClass);
+        var boxes = document.getElementsByClassName("box");
 
         // Get list of rooms
         rootDataRef.on("value", function(dataSnapshot) {
